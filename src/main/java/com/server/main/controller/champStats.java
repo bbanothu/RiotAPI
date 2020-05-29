@@ -6,7 +6,7 @@ public class champStats{
 		public int losses;
 		
 		public champStats(String champName) {
-			this.champName = champLookup.champName(champName);
+			this.champName = FunctionController.myChampLookup.champName(champName);
 			wins = 0;
 			losses = 0;
 		}
