@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Admin</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+
+	<ul class="nav nav-tabs" role="tablist">
+<li role="presentation>">
+			<form th:action="@{/user/home}" method="get">
+				<button class="btn btn-md btn-light" name="admin" type="Submit">Home</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/userlist}" method="get">
+				<button class="btn btn-md btn-light" name="users" type="Submit">Users</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/settings_page}" method="get">
+				<button class="btn btn-md btn-light" name="settings" type="Submit" 
+					>Settings</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/announcements}" method="get">
+				<button class="btn btn-md btn-light" name="announcements"
+					type="Submit">Announcements</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/admin/home}" method="get">
+				<button class="btn btn-md btn-light" name="admin" type="Submit" id="admin"
+					th:disabled="${admin_page}">Admin</button>
+			</form>
+</li>
+</ul>
+</div>
+	<div class="container">
+		<div class="panel-group" style="margin-top: 40px">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span th:utext="${userName}"></span>
+				</div>
+
+
+				<div class="col-md-6">
+					<h1 th:inline="text">Friendslist</h1>
+					<table class=" table table-condensed" border="1">
+						<thead>
+							<tr>
+								<th>Username</th>
+								<td>Name</td>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="contact : ${listContact}">
+								<th scope="row" th:text=${contact.username}></th>
+								<td th:text=${contact.name}></td>
+								<td>
+									<!--	<a th:href="@{/admin/deleteContact?id={id}(id=${contact.username})}">Edit</a> 
+							&nbsp;&nbsp;&nbsp;&nbsp; --> <a
+									th:href="@{/admin/deleteContact?id={id}(id=${contact.username})}">Delete</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-md-6">
+					<h1 th:inline="text">Annoucements</h1>
+					<table class=" table table-condensed" border="1">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<td>Message</td>
+								<td>User</td>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="ann : ${announcements}">
+								<td th:text=${ann.ann_date}></td>
+								<td th:text=${ann.ann_text}></td>
+								<td th:text=${ann.ann_user_name}></td>
+								<td>
+									<!--	<a th:href="@{/admin/deleteContact?id={id}(id=${contact.username})}">Edit</a> 
+							&nbsp;&nbsp;&nbsp;&nbsp;  --> <a
+									th:href="@{/admin/deleteAnnouncement?id={id}(id=${ann.ann_id})}">Delete</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+
+
+				<form th:action="@{/admin/post}" method="GET" class="form-signin">
+					<h3 class="form-signin-heading">Post Announcement</h3>
+					<input type="text" id="id" name="id" th:placeholder="Announcement"
+						class="form-control" />
+					<button class="btn btn-lg btn-primary " name="Submit" value="Login"
+						type="Submit" th:text="Post"></button>
+				</form>
+
+
+
+				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+
+				<form th:action="@{/logout}" method="get">
+					<button class="btn btn-md btn-danger btn-block" name="registration"
+						type="Submit">Logout</button>
+				</form>
+
+
+			</div>
+		</div>
+
+
+	</div>
+</body>
+</html>

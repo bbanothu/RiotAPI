@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Admin Page</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+	<div class="container">
+
+		<form th:action="@{/logout}" method="get">
+			<button class="btn btn-md btn-danger btn-block" name="registration"
+				type="Submit">Logout</button>
+		</form>
+
+		<form th:action="@{/admin/home}" method="get">
+			<button class="btn btn-md btn-danger btn-block" name="admin"
+				type="Submit" th:disabled="${admin_page}">admin</button>
+		</form>
+
+		<div class="panel-group" style="margin-top: 40px">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span th:utext="${userName}"></span>
+				</div>
+
+				<h1 th:inline="text">Friendslist</h1>
+				<table border="1">
+					<th>Username</th>
+					<th>Name</th>
+					<th>Email</th>
+
+					<tr th:each="contact : ${listContact}">
+						<td th:text=${contact.username}></td>
+						<td th:text=${contact.name}></td>
+						<td th:text=${contact.email}></td>
+					</tr>
+				</table>
+
+				<h1 th:inline="text">Annoucements</h1>
+				<table border="1">
+					<th>Date</th>
+					<th>Message</th>
+					<th>User</th>
+
+					<tr th:each="ann : ${announcements}">
+						<td th:text=${ann.ann_date}></td>
+						<td th:text=${ann.ann_text}></td>
+						<td th:text=${ann.ann_user_name}></td>
+					</tr>
+				</table>
+
+				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

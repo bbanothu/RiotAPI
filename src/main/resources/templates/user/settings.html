@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Settings</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+
+<body>
+	<div class="container">
+
+	<ul class="nav nav-tabs" role="tablist">
+<li role="presentation>">
+			<form th:action="@{/user/home}" method="get">
+				<button class="btn btn-md btn-light" name="admin" type="Submit">Home</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/userlist}" method="get">
+				<button class="btn btn-md btn-light" name="users" type="Submit">Users</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/settings_page}" method="get">
+				<button class="btn btn-md btn-light" name="settings" type="Submit" 
+					>Settings</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/announcements}" method="get">
+				<button class="btn btn-md btn-light" name="announcements"
+					type="Submit">Announcements</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/admin/home}" method="get">
+				<button class="btn btn-md btn-light" name="admin" type="Submit" id="admin"
+					th:disabled="${admin_page}">Admin</button>
+			</form>
+</li>
+</ul>
+</div>
+
+	<br><img th:src="@{/images/athletics_ISU_v4.png}" class="img-responsive center-block" alt="Iowa State" />	
+
+	<div class="container">
+		<div class="panel-group" style="margin-top: 40px">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span th:utext="${userName}"></span>
+				</div>
+<ul class="nav nav-tabs" role="tablist">
+<li role="presentation>">
+<a role="tab" data-toggle="tab" href="#username">Username</a>
+</li>
+<li role="presentation>">
+<a role="tab" data-toggle="tab" href="#password">Password</a>
+</li>
+<li role="presentation>">
+<a role="tab" data-toggle="tab" href="#email">Email</a>
+</li>
+<li role="presentation>">
+<a role="tab" data-toggle="tab" href="#delete">Delete</a>
+</li>
+</ul>
+
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane active" id="username">
+						<div class="col-md-6">
+												<h1 th:inline="text">Change Username</h1>
+							<form th:action="@{/user/settings_username}" method="GET"
+								class="form-signin">
+								<input type="text" id="new" name="new"
+									th:placeholder="NewUsername" class="form-control" /> <input
+									type="text" id="new1" name="new1"
+									th:placeholder="ReTypeNewUsername" class="form-control" />
+								<button class="btn btn-lg btn-primary " name="Submit"
+									value="Login" type="Submit" th:text="Update"></button>
+							</form>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="password">
+						<div class="col-md-6">
+							<h1 th:inline="text">Change Password</h1>
+							<form th:action="@{/user/settings_password}" method="GET"
+								class="form-signin">
+								<input type="text" id="old" name="old"
+									th:placeholder="OldPassword" class="form-control" /> <input
+									type="text" id="new" name="new" th:placeholder="NewPassword"
+									class="form-control" /> <input type="text" id="new1"
+									name="new1" th:placeholder="ReTypeNewPassword"
+									class="form-control" />
+								<button class="btn btn-lg btn-primary " name="Submit"
+									value="Login" type="Submit" th:text="Update"></button>
+							</form>
+
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="email">
+						<div class="col-md-6">
+							<h1 th:inline="text">Change Email</h1>
+							<form th:action="@{/user/settings_email}" method="GET"
+								class="form-signin">
+								<input type="text" id="new" name="new" th:placeholder="NewEmail"
+									class="form-control" /> <input type="text" id="new1"
+									name="new1" th:placeholder="ReTypeNewEmail"
+									class="form-control" />
+								<button class="btn btn-lg btn-primary " name="Submit"
+									value="Login" type="Submit" th:text="Update"></button>
+							</form>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="delete">
+						<div class="col-md-6">
+							<h1 th:inline="text">Delete Account</h1>
+							<form th:action="@{/user/settings_delete}" method="GET"
+								class="form-signin">
+								<input type="text" id="user" name="user" th:placeholder="Username"
+									class="form-control" /> <input type="text" id="pass"
+									name="pass" th:placeholder="Password" class="form-control" />
+								<button class="btn btn-lg btn-primary " name="Submit"
+									value="Login" type="Submit" th:text="Delete"></button>
+							</form>
+						</div>
+					</div>
+
+
+
+				</div>
+
+
+
+
+
+
+
+
+				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+
+
+				<form th:action="@{/logout}" method="get">
+					<button class="btn btn-md btn-danger btn-block" name="registration"
+						type="Submit">Logout</button>
+				</form>
+			</div>
+		</div>
+
+
+	</div>
+</body>
+</html>

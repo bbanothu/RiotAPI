@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Home</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+
+<body>
+
+	<div class="container">
+
+	<ul class="nav nav-tabs" role="tablist">
+<li role="presentation>">
+			<form th:action="@{/user/home}" method="get">
+				<button class="btn btn-md btn-light" name="admin" type="Submit">Home</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/userlist}" method="get">
+				<button class="btn btn-md btn-light" name="users" type="Submit">Users</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/settings_page}" method="get">
+				<button class="btn btn-md btn-light" name="settings" type="Submit" 
+					>Settings</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/user/announcements}" method="get">
+				<button class="btn btn-md btn-light" name="announcements"
+					type="Submit">Announcements</button>
+			</form>
+</li>
+<li role="presentation>">
+			<form th:action="@{/admin/home}" method="get">
+				<button class="btn btn-md btn-light" name="admin" type="Submit" id="admin"
+					th:disabled="${admin_page}">Admin</button>
+			</form>
+</li>
+</ul>
+		
+</div>
+
+		<br><img th:src="@{/images/athletics_ISU_v4.png}" class="img-responsive center-block" alt="Iowa State" />	
+
+	<div class="container">
+		<div class="panel-group" style="margin-top: 40px">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span th:utext="${userName}"></span>
+				</div>
+
+				<div class="col-md-6">
+					<h1 th:inline="text">Info</h1>
+					<table class=" table table-condensed" border="1">
+						<thead>
+							<tr>
+								<th>username</th>
+								<td>name</td>
+								<td>email</td>
+								<th>total_games</th>
+								<td>games_won</td>
+								<td>games_lost</td>		
+								<td>rank</td>							
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td th:text="${username}"></td>
+								<td th:text="${name}"></td>
+								<td th:text="${email}"></td>
+								
+								<td th:text="${total_games}"></td>
+								<td th:text="${games_won}"></td>
+								<td th:text="${games_lost}"></td>		
+								<td th:text="${rank}"></td>								
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+
+
+
+
+
+				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+
+
+				<form th:action="@{/logout}" method="get">
+					<button class="btn btn-md btn-danger btn-block" name="registration"
+						type="Submit">Logout</button>
+				</form>
+			</div>
+		</div>
+
+
+	</div>
+</body>
+</html>
