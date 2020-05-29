@@ -2,8 +2,6 @@ package com.server.main.controller;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import org.json.simple.JSONArray;
  
 public class User {
 	
@@ -21,11 +19,19 @@ public class User {
 		this.totalLosses = 0;
 	}
 	
-	
+	/**
+	 * Checks if the champion is already in the list of champ stats
+	 * @param thisChamp
+	 * @return
+	 */
 	public boolean contains(String thisChamp) {
 		return myChampStats.containsKey(thisChamp);
 	}
 	
+	/**
+	 * Adds a champion to list and/or increments the wins of champ  
+	 * @param champName
+	 */
 	public void addChampWins(String champName) {
 		if(contains(champName)) {
 			champStats temp = myChampStats.get(champName);
@@ -41,6 +47,10 @@ public class User {
 		
 	}
 	
+	/**
+	 * Adds a champion to list and/or increments the losses of champ
+	 * @param champName
+	 */
 	public void addChampLosses(String champName) {
 		if(contains(champName)) {
 			champStats temp = myChampStats.get(champName);
@@ -55,11 +65,16 @@ public class User {
 		}
 	}
 
-	
+	/**
+	 * To String function for better viewing in terminal
+	 */
 	public String toString() {
 		return "Wins: " + totalWins + ", Losses: " + totalLosses + ", Champ Stats: " + ChampStatsToString();
 	}
 	
+	/**
+	 * To String function for champStats
+	 */
 	public String ChampStatsToString() {
 		String returnVal = "";
         for (Entry<String, champStats> entry : myChampStats.entrySet())  {
@@ -70,5 +85,4 @@ public class User {
 		return returnVal;
 	}
 	
-
 }

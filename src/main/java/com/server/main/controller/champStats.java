@@ -11,7 +11,6 @@ public class champStats{
 			losses = 0;
 		}
 		
-		
 }
 	
 	

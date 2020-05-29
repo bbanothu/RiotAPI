@@ -1,11 +1,6 @@
 package com.server.main.controller;
 
-import java.util.HashMap;
-
-import org.json.simple.JSONArray;
- 
 public  class champLookup {
-	
 	public static String champName(String id) {
 		int intId = Integer.parseInt(id);
 		switch(intId) {
@@ -216,7 +211,6 @@ public  class champLookup {
 		case 143:
 		    return "Zyra";
 		}
-		
 		return null;
 		
 	}
