@@ -21,7 +21,9 @@ public  class champLookup {
 	public void initChampLookup() {
 		// Read Json File
 		try {
-			String path = new File(".").getCanonicalPath() + "\\ChampInfoJson.json";
+			String path = new File(".").getCanonicalPath() + "//ChampInfoJson.json";
+			//String path = new File(".").getCanonicalPath() + "\\ChampInfoJson.json";
+
 			JSONObject allChampStats = jsonObjectParser(path);
 			JSONObject allChampStatsArray = (JSONObject) allChampStats.get("data");
 			allChampStatsArray.keySet().forEach(keyStr ->{

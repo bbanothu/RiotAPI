@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -42,12 +44,14 @@ public class FunctionController {
 
 	@ResponseBody
 	@RequestMapping(value = "/inhouseStats", method = RequestMethod.GET)
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	public String getInHouseStatsFromJSON() {
 		// Read Json File
 		JSONArray allCustomGamesJson = null;
+		allUsers = new HashMap<String, User>();
 		try {
-			String path = new File(".").getCanonicalPath() + "\\DataJson.json";
+			String path = new File(".").getCanonicalPath() + "//DataJson.json";
+			//String path = new File(".").getCanonicalPath() + "\\DataJson.json";
 			allCustomGamesJson = jsonArrayParser(path);
 			myChampLookup = new champLookup();
 		} catch (Exception e) {
@@ -76,6 +80,8 @@ public class FunctionController {
 		}
 
 		String returnValue = new Gson().toJson(allUsers);
+		
+		//JsonObject temp = new Gson().toJson(allUsers);
 		System.out.println(returnValue);
 		return returnValue;
 	}
@@ -98,6 +104,7 @@ public class FunctionController {
 			String username = playerDetails.get("summonerName").toString();
 			String accountId = playerDetails.get("accountId").toString();
 
+			JSONObject stats = (JSONObject) currentUser.get("stats");
 			if (allUsers.containsKey(username)) {
 				User temp = allUsers.get(username);
 				String winOrLoose = (String) currentUser.get("teamId").toString();
@@ -111,6 +118,10 @@ public class FunctionController {
 					temp.addChampLosses(champId);
 					loosingTeam.put(username, temp);
 				}
+				temp.totalKills += Integer.parseInt( stats.get("kills").toString());
+				temp.totalDeaths += Integer.parseInt( stats.get("deaths").toString());
+				temp.totalAssists += Integer.parseInt( stats.get("assists").toString());
+				temp.totalDamageDealt += Integer.parseInt( stats.get("totalDamageDealtToChampions").toString());
 				allUsers.put(username, temp);
 			} else {
 				User temp = new User(accountId, username);
@@ -137,6 +148,7 @@ public class FunctionController {
 			User temp = allUsers.get(entry.getKey());
 			temp.getMostWins();
 			temp.getMostLosses();
+			temp.mostWinLossPairCalc();
 			
 			allUsers.put(entry.getKey() , temp);
 			

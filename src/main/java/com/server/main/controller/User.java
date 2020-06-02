@@ -16,18 +16,37 @@ public class User {
 			this.wins = highestWins;
 		}
 	}
+	
+	class mostWinLossPair {
+		String name;
+		int wins;
+		int losses;
+		public mostWinLossPair(String name, int highestWins, int highestLosses) {
+			this.name = name;
+			this.wins = highestWins;
+			this.losses = highestLosses;
+		}
+	}
 
 	String username;
 	String accountId;
 	int totalWins;
 	int totalLosses;
 
+	int totalKills;
+	int totalDeaths;
+	int totalAssists;
+	int totalDamageDealt;
+	
 	userPair mostWinsWithPlayer;
 	userPair mostLossesWithPlayer;
 	
 	HashMap<String, champStats> myChampStats = new HashMap<String, champStats>();
 	HashMap<String, Integer> winsWithPlayer = new HashMap<String, Integer>();
 	HashMap<String, Integer> lossesWithPlayer = new HashMap<String, Integer>();
+	
+	HashMap<String, mostWinLossPair> mostWinLossSet = new HashMap<String, mostWinLossPair>();
+	
 
 	public User(String accountId, String username) {
 		this.accountId = accountId;
@@ -154,10 +173,10 @@ public class User {
 	
 	public void getMostWins() {
 		String highestWinsName = "";
-		int highestWins = Integer.MIN_VALUE;
+		int highestWins = 0;
 
 		for (Entry<String, Integer> entry : winsWithPlayer.entrySet()) {
-			if (highestWins < entry.getValue()) {
+			if (highestWins <= entry.getValue()) {
 				highestWins = entry.getValue();
 				highestWinsName = entry.getKey();
 			}
@@ -168,14 +187,35 @@ public class User {
 	
 	public void  getMostLosses() {
 		String highestLossesName = "";
-		int highestLosses = Integer.MIN_VALUE;
+		int highestLosses = 0;
 		for (Entry<String, Integer> entry : lossesWithPlayer.entrySet()) {
-			if (highestLosses < entry.getValue()) {
+			if (highestLosses <= entry.getValue()) {
 				highestLosses = entry.getValue();
 				highestLossesName = entry.getKey();
 			}
 		}
 		mostLossesWithPlayer = new userPair(highestLossesName , highestLosses);
+	}
+	
+	public void mostWinLossPairCalc() {
+		
+		for (Entry<String, Integer> entry : lossesWithPlayer.entrySet()) {
+				mostWinLossPair temp = new mostWinLossPair(entry.getKey() , 0, entry.getValue());
+				mostWinLossSet.put(entry.getKey(), temp);
+
+		}
+		
+		for (Entry<String, Integer> entry : winsWithPlayer.entrySet()) {
+			if(mostWinLossSet.containsKey(entry.getKey())) {
+				mostWinLossPair temp = mostWinLossSet.get(entry.getKey());
+				temp.wins = entry.getValue();
+			}else {
+				mostWinLossPair temp = new mostWinLossPair(entry.getKey() , entry.getValue(), 0);
+				mostWinLossSet.put(entry.getKey(), temp);
+				
+			}
+
+		}
 	}
 
 }
