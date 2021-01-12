@@ -4,26 +4,21 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.io.File;
 import java.io.FileReader;
-
+import java.io.FileWriter;
+import java.io.IOException;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
+import com.server.main.Requests.RequestType;
+import com.server.main.Requests.SingletonList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.client.RestTemplate;
-//import com.fasterxml.jackson.annotation.JsonValue;
-//import com.google.gson.JsonArray;
-//import com.google.gson.JsonElement;
-//import com.google.gson.JsonObject;
-//import java.util.Iterator;
 
 /**
  * Controller class for using information from the server and modifying it
@@ -34,14 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FunctionController {
-//	ArrayList<String> customGameIds = new ArrayList<String>(
-//		List.of("3432745301", "3432745215", "3432545654", "3432894662",
-//		"3432600156", "3432600019", "3430349368", 
-//		"3423692071", "3423342521", "3423471962", "3423501855", "3423501596", "3409201018",
-//		"3404332074", "3404331677", "3402197054", "3402185963"));
 	HashMap<String, User> allUsers = new HashMap<String, User>();
 	public static champLookup myChampLookup;
-
+	
+	/**
+	 * Used to get inhouse stats for leauge of legends
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/inhouseStats", method = RequestMethod.GET)
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -80,8 +74,8 @@ public class FunctionController {
 		}
 
 		String returnValue = new Gson().toJson(allUsers);
-		
-		//JsonObject temp = new Gson().toJson(allUsers);
+
+		// JsonObject temp = new Gson().toJson(allUsers);
 		System.out.println(returnValue);
 		return returnValue;
 	}
@@ -118,10 +112,10 @@ public class FunctionController {
 					temp.addChampLosses(champId);
 					loosingTeam.put(username, temp);
 				}
-				temp.totalKills += Integer.parseInt( stats.get("kills").toString());
-				temp.totalDeaths += Integer.parseInt( stats.get("deaths").toString());
-				temp.totalAssists += Integer.parseInt( stats.get("assists").toString());
-				temp.totalDamageDealt += Integer.parseInt( stats.get("totalDamageDealtToChampions").toString());
+				temp.totalKills += Integer.parseInt(stats.get("kills").toString());
+				temp.totalDeaths += Integer.parseInt(stats.get("deaths").toString());
+				temp.totalAssists += Integer.parseInt(stats.get("assists").toString());
+				temp.totalDamageDealt += Integer.parseInt(stats.get("totalDamageDealtToChampions").toString());
 				allUsers.put(username, temp);
 			} else {
 				User temp = new User(accountId, username);
@@ -142,16 +136,16 @@ public class FunctionController {
 		updateWins(winningTeam, loosingTeam);
 		updateMostWinsWithPlayers();
 	}
-	
+
 	public void updateMostWinsWithPlayers() {
 		for (Entry<String, User> entry : allUsers.entrySet()) {
 			User temp = allUsers.get(entry.getKey());
 			temp.getMostWins();
 			temp.getMostLosses();
 			temp.mostWinLossPairCalc();
-			
-			allUsers.put(entry.getKey() , temp);
-			
+
+			allUsers.put(entry.getKey(), temp);
+
 		}
 	}
 
@@ -221,7 +215,8 @@ public class FunctionController {
 	}
 
 	/**
-	 * Parse and return a JSONArray from given a path
+	 * http://localhost:8080/addNewGame Parse and return a JSONArray from given a
+	 * path
 	 * 
 	 * @param path
 	 * @return
@@ -238,4 +233,105 @@ public class FunctionController {
 		return myJsonArray;
 	}
 
+	/**
+	 * Used to add new games to the server
+	 * 
+	 * @param game - Json
+	 * @return
+	 * @throws ParseException
+	 */
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value = "/addNewGame", method = RequestMethod.POST, consumes = "application/json")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	public String addStatsToJson(@RequestBody JSONObject game) throws ParseException {
+		JSONArray allCustomGamesJson = null;
+		allUsers = new HashMap<String, User>();
+		boolean gameExists = false;
+		try {
+			String path = new File(".").getCanonicalPath() + "//DataJson.json";
+			//String path = new File(".").getCanonicalPath() + "\\DataJson.json";
+			allCustomGamesJson = jsonArrayParser(path);
+			System.out.println("Current Games: " + allCustomGamesJson.toJSONString());
+
+			String newGameId = game.get("gameId").toString();
+			for (int i = 0; i < allCustomGamesJson.size(); i++) {
+				JSONObject currentGame = (JSONObject) allCustomGamesJson.get(i);
+				String currentGameId = currentGame.get("gameId").toString();
+				if (currentGameId.equals(newGameId)) {
+					gameExists = true;
+					break;
+				}
+			}
+
+			if (!gameExists) {
+				allCustomGamesJson.add(game);
+				try (FileWriter file = new FileWriter(path)) {
+					file.write(allCustomGamesJson.toJSONString());
+					file.flush();
+					System.out.println("Added new Game: " + game);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("Game already exists!");
+				return "Game already exists!";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "Added new Game: " + game;
+
+	}
+	
+	/**
+	 * Used to add reservations requests to ammenitypass ( Needs to split into a seperate application - TODO )
+	 * @param game - Json
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/addNewRequest", method = RequestMethod.POST, consumes = "application/json")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	public String addNewRequest(@RequestBody JSONObject request) throws ParseException {
+		 SingletonList RequestQueue = SingletonList.getInstance();
+		 String unit = request.get("unit").toString(); 
+		 String passcode  = request.get("passcode").toString(); 
+		 String reservation  = request.get("reservation").toString(); 
+		 String time = request.get("time").toString(); 
+		 String date = request.get("date").toString(); 
+		 String policy = request.get("policy").toString(); 
+		 String name = request.get("name").toString(); 
+		 String tel = request.get("tel").toString(); 
+		 String email = request.get("email").toString(); 
+		 
+		RequestType temp = new RequestType(unit, passcode, reservation, time, date, policy, name, tel, email);
+		boolean status = RequestQueue.addRequest(temp);
+		
+		if(status) {
+			return "Success";
+		}else {
+			return "Fail";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
