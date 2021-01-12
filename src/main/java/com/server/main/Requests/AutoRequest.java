@@ -28,25 +28,24 @@ public class AutoRequest extends Thread{
 
 	public void run()  {
 		System.out.println("Request Server is running!");
-		try {
 			while (true) {
-				if (requestQueue.requests.size() > 0) {
+				System.out.print("");
+				int size = requestQueue.requests.size();
+				if (size > 0) {
 					// Compare dates
-					if(compareTime(requestQueue.requests.get(0))){
-						System.out.println("Making Request");
-						MakeRequest(requestQueue.requests.get(0));
-						requestQueue.requests.remove(0);
+					boolean status = compareTime(requestQueue.requests.get(0));
+					if(status){
+						try {
+							System.out.println("Making Request");
+							MakeRequest(requestQueue.requests.get(0));
+							requestQueue.requests.remove(0);
+						} catch (IOException | URISyntaxException | InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 
-				} else {
-					
 				}
 			}
-		} catch (IOException | URISyntaxException | InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			System.out.println("A ranked game has ended.");
-		}
 	}
 	
 	/**
@@ -77,9 +76,10 @@ public class AutoRequest extends Thread{
 		String token = tokenRequest(current);
 		if(!token.equals("false")) {
 			String response = reservationRequest(current, token);
+			System.out.println(response);
 		} else {
 			// TODO
-			System.out.println("error");
+			System.out.println("There was an error making the request");
 		}
 	}
 	
@@ -128,7 +128,6 @@ public class AutoRequest extends Thread{
 		try {
 			Object obj = parser.parse(response.body());
 			jsonValue = (JSONObject) obj;
-			System.out.println(jsonValue);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
