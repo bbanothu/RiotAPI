@@ -3,4 +3,4 @@ I add any api/logic to this whenever I want to extend functionality to my websit
 
 - Currently, this serves 2 purposes:
   - Leauge of legends data aggregator for custom games between friends.
-  - A auto reservation tool to make reservations for me at specific times when the reservations open up. 
+  - A poorly made auto reservation tool to make reservations for me at specific times when reservations open up for my building. 
