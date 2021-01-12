@@ -31,9 +31,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class FunctionController {
 	HashMap<String, User> allUsers = new HashMap<String, User>();
 	public static champLookup myChampLookup;
-	
+
 	/**
 	 * Used to get inhouse stats for leauge of legends
+	 * 
 	 * @return
 	 */
 	@ResponseBody
@@ -45,7 +46,7 @@ public class FunctionController {
 		allUsers = new HashMap<String, User>();
 		try {
 			String path = new File(".").getCanonicalPath() + "//DataJson.json";
-			//String path = new File(".").getCanonicalPath() + "\\DataJson.json";
+			// String path = new File(".").getCanonicalPath() + "\\DataJson.json";
 			allCustomGamesJson = jsonArrayParser(path);
 			myChampLookup = new champLookup();
 		} catch (Exception e) {
@@ -250,7 +251,7 @@ public class FunctionController {
 		boolean gameExists = false;
 		try {
 			String path = new File(".").getCanonicalPath() + "//DataJson.json";
-			//String path = new File(".").getCanonicalPath() + "\\DataJson.json";
+			// String path = new File(".").getCanonicalPath() + "\\DataJson.json";
 			allCustomGamesJson = jsonArrayParser(path);
 			System.out.println("Current Games: " + allCustomGamesJson.toJSONString());
 
@@ -283,9 +284,11 @@ public class FunctionController {
 		return "Added new Game: " + game;
 
 	}
-	
+
 	/**
-	 * Used to add reservations requests to ammenitypass ( Needs to split into a seperate application - TODO )
+	 * Used to add reservations requests to ammenitypass ( Needs to split into a
+	 * seperate application - TODO )
+	 * 
 	 * @param game - Json
 	 * @return
 	 * @throws ParseException
@@ -293,45 +296,75 @@ public class FunctionController {
 	@RequestMapping(value = "/addNewRequest", method = RequestMethod.POST, consumes = "application/json")
 	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	public String addNewRequest(@RequestBody JSONObject request) throws ParseException {
-		 SingletonList RequestQueue = SingletonList.getInstance();
-		 String unit = request.get("unit").toString(); 
-		 String passcode  = request.get("passcode").toString(); 
-		 String reservation  = request.get("reservation").toString(); 
-		 String time = request.get("time").toString(); 
-		 String date = request.get("date").toString(); 
-		 String policy = request.get("policy").toString(); 
-		 String name = request.get("name").toString(); 
-		 String tel = request.get("tel").toString(); 
-		 String email = request.get("email").toString(); 
-		 
+		SingletonList RequestQueue = SingletonList.getInstance();
+		String unit = request.get("unit").toString();
+		String passcode = request.get("passcode").toString();
+		String reservation = request.get("reservation").toString();
+		String time = request.get("time").toString();
+		String date = request.get("date").toString();
+		String policy = request.get("policy").toString();
+		String name = request.get("name").toString();
+		String tel = request.get("tel").toString();
+		String email = request.get("email").toString();
+
 		RequestType temp = new RequestType(unit, passcode, reservation, time, date, policy, name, tel, email);
 		boolean status = RequestQueue.addRequest(temp);
-		
-		if(status) {
+
+		if (status) {
 			return "Success";
-		}else {
+		} else {
 			return "Fail";
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	/**
+	 * Used to see all pending requests
+	 * 
+	 * @param game - Json
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/getPendingRequests", method = RequestMethod.GET)
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	public String addNewRequest() throws ParseException {
+		SingletonList RequestQueue = SingletonList.getInstance();
+		String returnValue = new Gson().toJson(RequestQueue.requests);
+		return returnValue;
+
+	}
+
+	/**
+	 * Used to add reservations requests to ammenitypass ( Needs to split into a
+	 * seperate application - TODO )
+	 * 
+	 * @param game - Json
+	 * @return
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = "/removePendingRequests", method = RequestMethod.POST, consumes = "application/json")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	public String removePendingRequest(@RequestBody JSONObject request) throws ParseException {
+		SingletonList RequestQueue = SingletonList.getInstance();
+		String unit = request.get("unit").toString();
+		String passcode = request.get("passcode").toString();
+		String reservation = request.get("reservation").toString();
+		String time = request.get("time").toString();
+		String date = request.get("date").toString();
+		String policy = request.get("policy").toString();
+		String name = "";
+		String tel = "";
+		String email = "";
+
+		RequestType temp = new RequestType(unit, passcode, reservation, time, date, policy, name, tel, email);
+
+		boolean status = RequestQueue.removeRequest(temp);
+
+		if (status) {
+			return "Removal Successful";
+		} else {
+			return "Request not found";
+		}
+
+	}
+
 }

@@ -1,7 +1,11 @@
 package com.server.main.Requests;
 
+/**
+ * Object used to store all the details for a request
+ * @author bbanothu
+ *
+ */
 public class RequestType {
-	
 	public String unit;
 	public String passcode;
 	public String reservation;
@@ -21,8 +25,5 @@ public class RequestType {
 		this.name = name;
 		this.tel = tel;
 		this.email = email;
-		
-	
 	}
-	
 }
